@@ -25,21 +25,19 @@ pairs.forEach(pair =>{
 //the first entry in wordsToSearch, which has the highest LFS.
 let currentBestWord = wordsToSearch[0].text;
 
-//Print the currentBestWord to the console
-printCurrentBestWord();
-//Update wordsToSearch with the results
-updateWordsWithResults('00000');
-printCurrentBestWord();
-console.log(wordsToSearch);
-console.log(wordsToSearch.length);
-updateWordsWithResults('00112');
-printCurrentBestWord();
-console.log(wordsToSearch);
-console.log(wordsToSearch.length);
-updateWordsWithResults('01102');
-printCurrentBestWord();
-console.log(wordsToSearch);
-console.log(wordsToSearch.length);
+//------------DOM Manipulation---------//
+
+//Create variable to store colour codes
+const wordleGreen = 'rgb(106, 170, 100)';
+const wordleYellow = 'rgb(201, 180, 88)';
+const wordleGrey = 'rgb(120, 124, 126)';
+const wordleWhite = 'rgb(255, 255, 255)';
+
+//Assign container to a variable
+const container = document.querySelector('.container');
+createNewRow();
+createButton();
+
 
 
 //-----------------------------//
@@ -109,4 +107,134 @@ function updateWordsWithResults(results){
         
     }
     currentBestWord = getBestWord();
+}
+
+//----------------DOM Manipulation--------------//
+
+//Create a function to produce a new row of letters and fill it with best word
+function createNewRow(){
+    //Create div of class 'wordRow'
+    const row = document.createElement('div');
+    row.classList.add('wordRow', 'currentRow');
+    //Get array of letters in currentBestWord
+    const bestWordArray = getBestWord().split('');
+    //Create five 'letterBox' divs and fill with letters of currentBestWord
+    for (i=0;i<5;i++){
+        const box = document.createElement('div');
+        box.classList.add('letterBox');
+        box.innerText = bestWordArray[i].toUpperCase();
+        box.style.background = wordleWhite;
+        box.style.color = 'black';
+        box.addEventListener('click', boxClick)
+        row.appendChild(box);
+    }
+    container.appendChild(row);
+}
+
+function createButton(){
+    //Create new button element
+    const button = document.createElement('button');
+    button.innerText = "Submit Results";
+    button.disabled = true; //Disable the button so it cannot be pressed to start with
+    button.addEventListener('click', resultsSubmitted);
+    document.querySelector('body').appendChild(button);
+}
+
+//Create a function that enables the submit button if all of the current 
+//boxes have had options entered
+function enableButtonIfAllBoxesClicked(){
+    //Assign button to variable
+    const button = document.querySelector('button');
+    //Get a nodelist of letterBoxes in currentRow
+    const currentLetterBoxes = getCurrentRowBoxes();
+    //Create a bool to record whether button should be disabled and set to false
+    let disabled = false;
+    //Iterate through nodes and set enable to false and break if any have not been clicked 
+    for (box of currentLetterBoxes){
+        const tc = box.style.color;
+        if (tc != 'white'){
+            disabled = true;
+            break;
+        }
+    }
+    //Set button to disabled if any boxes have not been clicked.
+    disableButton(disabled);
+}
+
+//Create a function that returns a string of the results based on the 
+//user input
+function getResultsFromInput(){
+    //Get NodeList of all current boxes
+    boxes = getCurrentRowBoxes();
+    //Create variable to store results string
+    let results = '';
+    //Iterate through boxes and update results based on background colour
+    boxes.forEach(box => {
+        //Get background colour of box
+        const bc = box.style.background;
+        switch (bc){
+            case wordleGrey:
+                results += '0'; // 0 means the letter was grey
+                break;
+            case wordleYellow:
+                results += '1'; // 1 means the letter was yellow
+                break;
+            case wordleGreen:
+                results += '2'; // 2 means the letter was green
+                break;
+        }
+    })
+    console.log(results);
+    return results;
+}
+
+//Create a function to return the currentRow
+function getCurrentRow(){
+    return document.querySelector('.currentRow');
+}
+
+//Create a function that returns a NodeList of the boxes in the currentRow.
+function getCurrentRowBoxes(){
+    return document.querySelectorAll('.currentRow > .letterBox');
+}
+
+//Create a function to disable/able the button
+function disableButton(bool){
+    const button = document.querySelector('button');
+    button.disabled = bool;
+}
+
+//-------------------Callbacks-------------------//
+
+//Create a function to change the background colour of a letterbox when it is clicked.
+function boxClick(){
+    //Cycle through the background colours
+    const bc = this.style.background;
+    if (bc === wordleGrey){ 
+        this.style.background = wordleYellow;
+    }
+    else if (bc === wordleYellow){
+        this.style.background = wordleGreen;
+    }
+    else{ //If it is white or green, it will set to grey.
+        this.style.background = wordleGrey;
+    }
+    //If not already, set text colour to white.
+    this.style.color = 'white';
+    //Check to see if submit button should be enabled.
+    enableButtonIfAllBoxesClicked();
+}
+
+//Create a function that reads and handles the results when the button is pressed.
+function resultsSubmitted(){
+    //Get the results inputted by the user
+    let results = getResultsFromInput();
+    //Pass the results to updateWordsWithResults()
+    updateWordsWithResults(results);
+    //Remove .currentRow class from the current row
+    getCurrentRow().classList.remove('currentRow');
+    //Add new row
+    createNewRow();
+    //Disable button
+    disableButton(true);
 }

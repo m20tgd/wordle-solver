@@ -1,0 +1,43 @@
+
+h1, p{
+    font-family: Verdana, Tahoma, sans-serif;
+    text-align: center;
+}
+
+h1{
+    font-size: 50px;
+}
+
+p{
+    font-size: 15px;
+    margin: 0 25%;
+}
+
+.wordRow{
+    display: flex;
+    flex: 1;
+    gap: 4em;
+    justify-content:center;
+    margin:  4em 1em;
+}
+
+.letterBox{
+    display: flex;
+    border: .05em solid black;
+    font-family: monospace;
+    font-family: Courier, monospace;
+    font-size: 60px;
+    justify-content: center;
+    align-items: center;
+    width: 1.5em;
+    height: 1.5em;
+    background: wordleGreen;
+}
+
+button{
+    display: block;
+    margin: 3em auto;
+    width: 10em;
+    height: 4em;
+}
+
