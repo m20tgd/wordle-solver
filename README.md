@@ -5,4 +5,6 @@ I used two dictionary lists from https://github.com/dolph/dictionary (popular.tx
 
 I developed nodeJS apps to filter these lists down to just the five letter words, calculate the frequency of every letter of the alphabet in these words, scored every word based on the frequency of its letters and finally order them based on this score.
 
-I intend to develop a website that tells the user the best words to play based on the results of the previous word that was played.
+I then turned this into a website that provides the user with the best word to play and provides them with their next best word based on their input that they provide from Wordle.
+
+When I have become more experienced I will turn it into a dynamic website so that the data can be read from a file on the server rather than hard coded into the JS file. 
