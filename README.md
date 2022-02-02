@@ -1,7 +1,7 @@
 # wordle-solver
 An app for solving the popular Wordle game.
 
-I used two dictionary lists from https://github.com/dolph/dictionary (popular.txt and enable1.txt - the first returning the correct words more quickly but the latter being a more extensive list of words).
+I used two dictionary lists from https://github.com/dolph/dictionary (popular.txt and enable1.txt - the first returning the correct words more quickly but the latter being a more extensive list of words). I later discovered that the list of words used by Wordle is hard coded into their JS, so I used this list instead in the final product.
 
 I developed nodeJS apps to filter these lists down to just the five letter words, calculate the frequency of every letter of the alphabet in these words, scored every word based on the frequency of its letters and finally order them based on this score.
 
