@@ -40,6 +40,8 @@ createButton();
 
 //Create a function to return the best word to play (the first in the wordsToSearch array)
 function getBestWord(){
+    //If there is only one possible word remaining, then return this
+    if (wordsToSearch.length === 1) return wordsToSearch[0];
     //If this is the second guess, return the best word that doesn't contain any of the same
     //letters as the previous best word
     if (guess === 2 || guess === 3){
@@ -47,15 +49,16 @@ function getBestWord(){
         const alternativeBestWord = alternativeWordsArray[0];
         //If any of the remaining possible words contain letters in the best alternative word,
         //then return the alternative word, otherwise the normal best word will be returned.
-        wordsToSearch.forEach(word => {
+        for (const word of wordsToSearch) {
             const letterArray = word.split('');
             for (i=0;i<5;i++){
+                // if (guess === 3) console.log(letterArray.includes(alternativeBestWord[i]));
                 if (letterArray.includes(alternativeBestWord[i])){
+                    console.log(alternativeBestWord);
                     return alternativeBestWord;
                 }
             }
-        })
-        return alternativeWordsArray[0];
+        }
     }
     return wordsToSearch[0];
 }
