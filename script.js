@@ -43,16 +43,25 @@ function getBestWord(){
     //If this is the second guess, return the best word that doesn't contain any of the same
     //letters as the previous best word
     if (guess === 2 || guess === 3){
+        //Set const for alternativeBestWord from array
+        const alternativeBestWord = alternativeWordsArray[0];
+        //If any of the remaining possible words contain letters in the best alternative word,
+        //then return the alternative word, otherwise the normal best word will be returned.
+        wordsToSearch.forEach(word => {
+            const letterArray = word.split('');
+            for (i=0;i<5;i++){
+                if (letterArray.includes(alternativeBestWord[i])){
+                    return alternativeBestWord;
+                }
+            }
+        })
         return alternativeWordsArray[0];
     }
-    else{
-        return wordsToSearch[0];
-    }
+    return wordsToSearch[0];
 }
 
 //Create a function to remove all the words that contain a certain letter (GREY)
 function greyLetterUpdate(letter, wordsArray){
-    if (guess === 3) console.log(`Letter ${letter}    First words - ${wordsArray[0]}`);
     wordsArray = wordsArray.filter(word =>{
         const wordArray = word.split('');
         return (!wordArray.includes(letter)); 
@@ -95,7 +104,6 @@ function updateWordsWithResults(results, wordsArray){
         switch(parseInt(results[i])){
             case 0: 
                 wordsArray = greyLetterUpdate(currentBestWord[i], wordsArray);
-                if (guess === 3) console.log(wordsArray.length);
                 break;
             case 1:
                 wordsArray = yellowLetterUpdate(currentBestWord[i], i, wordsArray);
@@ -248,7 +256,7 @@ function resultsSubmitted(){
     //Update 'words-left' paragraph
     const para = getWordsLeftPara();
     if (wordsToSearch.length <= 20){
-        let words = 'The remaining possible words are: ';
+        let words = `The ${wordsToSearch.length} remaining possible words are: `;
         wordsToSearch.forEach(word => words += `${word.toUpperCase()}   `)
         para.innerText = words;
     }
