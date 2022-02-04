@@ -5,15 +5,15 @@ const pairs = data.split(';');
 //Create an array to store all the words and a second one to store the previous set
 //of words so an alternative best word can be found
 let wordsToSearch = [];
-let previousWordsToSearch = [];
+let alternativeWordsArray = [];
 //Create a variable to store the number of guesses and set to 1
 let guess = 1;
-//Iterate through pairs and for each one add a Word object to wordsToSearch using 
-//the text and lfs from the pair
+//Iterate through pairs and for each one add the text to the two word arrays 
 pairs.forEach(pair =>{
     pair = pair.split(',');
     const word = pair[0];
     wordsToSearch.push(word);
+    alternativeWordsArray.push(word);
 })
 //Create a variable to hold the current best word to search and set it to
 //the first entry in wordsToSearch, which has the highest LFS.
@@ -42,11 +42,8 @@ createButton();
 function getBestWord(){
     //If this is the second guess, return the best word that doesn't contain any of the same
     //letters as the previous best word
-    if (guess === 2){
-        //Create temporary second array that contains no words with the same letters as current word
-        const tempArray = updateWordsWithResults('00000', previousWordsToSearch);
-        //Return the best word from this array
-        return tempArray[0];
+    if (guess === 2 || guess === 3){
+        return alternativeWordsArray[0];
     }
     else{
         return wordsToSearch[0];
@@ -236,10 +233,11 @@ function resultsSubmitted(){
     guess += 1;
     //Get the results inputted by the user
     let results = getResultsFromInput();
-    //Set previousWordsToSearch as current wordsToSearch before it is updated.
-    previousWordsToSearch = wordsToSearch;
     //Pass the results to updateWordsWithResults()
     wordsToSearch = updateWordsWithResults(results, wordsToSearch);
+    //Filter down alternativeWordArray to remove all the letters used so far
+    alternativeWordsArray = updateWordsWithResults('00000', alternativeWordsArray);
+    //Get new best word
     currentBestWord = getBestWord();
     //Remove .currentRow class from the current row
     getCurrentRow().classList.remove('currentRow');
