@@ -44,7 +44,7 @@ function getBestWord(){
     if (wordsToSearch.length === 1) return wordsToSearch[0];
     //If this is the second guess, return the best word that doesn't contain any of the same
     //letters as the previous best word
-    if (guess === 2 || guess === 3){
+    if ((guess === 2 || guess === 3) && alternativeWordsArray.length > 0){
         //Set const for alternativeBestWord from array
         const alternativeBestWord = alternativeWordsArray[0];
         //If any of the remaining possible words contain letters in the best alternative word,
@@ -118,20 +118,17 @@ function updateWordsWithResults(results, wordsArray){
     return wordsArray;
 }
 
-//Create a function that receives a word array, calculates the frequency of each letter
-//and returns a re-ordered array based on this
-function getWordsOrderedByFrequency(wordArray){
-    //Create array to store the letter frequency count
+
+function getLetterFrequencyOfWordArray(wordArray){
+    //Create array to store the letter frequency count and fill with 0s
     let letterFrequencies = new Array(26);
+    letterFrequencies.fill(0);
     //Iterate through all the words in wordArray and update the letter frequency array
     //with each one
     for (let word of wordArray){
         letterFrequencies = updateLetterFrequency(word, letterFrequencies)
     }
-    //Re-order wordArray using letter frequency array and return
-    return wordArray.sort((a,b) => {
-        calculateLFScore(b,letterFrequencies) - calculateLFScore(a,letterFrequencies)
-    });
+    return letterFrequencies
 }
 
 //Create a function that takes a word and letter freqeuncy array and updates the array
@@ -149,6 +146,16 @@ function updateLetterFrequency(word, letterFrequencyArray){
     return letterFrequencyArray;
 }
 
+//Create a function that receives a word array, calculates the frequency of each letter
+//and returns a re-ordered array based on this
+function getWordsOrderedByFrequency(wordArray, letterFrequencies){
+    //Re-order wordArray using letter frequency array and return
+    return newArray = wordArray.sort((a,b) => {
+        return calculateLFScore(b,letterFrequencies) - calculateLFScore(a,letterFrequencies);
+    });
+}
+
+
 //Create a fucntions that receives a word and returns its letter frequency score
 //ALF is calculated by adding the frequencies of all the unique letters, as we want 
 //to prioritise letters with more unique letters to eliminate more possible letters each round.
@@ -165,10 +172,11 @@ function calculateLFScore(word, letterFrequencyArray){
         letters.forEach(letter =>{
             if (letter != lastLetter){
                 const index = getArrayIndex(letter);
-                lfScore += parseInt(letter => {letterFrequencyArray[index]});
+                lfScore += parseInt(letterFrequencyArray[index]);
             }
             lastLetter = letter;
         })
+        
         return lfScore;
 }
 
@@ -309,6 +317,11 @@ function resultsSubmitted(){
     wordsToSearch = updateWordsWithResults(results, wordsToSearch);
     //Filter down alternativeWordArray to remove all the letters used so far
     alternativeWordsArray = updateWordsWithResults('00000', alternativeWordsArray);
+    //Get new letter frequency of wordsToSearch
+    const letterFrequencies = getLetterFrequencyOfWordArray(wordsToSearch);
+    //Re-order both arrays based on the new letter frequency of wordsToSearch
+    wordsToSearch = getWordsOrderedByFrequency(wordsToSearch, letterFrequencies);
+    alternativeWordsArray = getWordsOrderedByFrequency(alternativeWordsArray, letterFrequencies);
     //Get new best word
     currentBestWord = getBestWord();
     //Remove .currentRow class from the current row
