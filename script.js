@@ -8,12 +8,6 @@ let alternativeWordsArray = [];
 let letterFrequencies;
 //Create a variable to store the number of guesses and set to 1
 let guess = 1;
-//Iterate through pairs and for each one add the text to the two word arrays 
-// pairs.forEach(pair =>{
-//     pair = pair.split(',');
-//     const word = pair[0];
-//     wordsToSearch.push(word);
-// })
 //Get letter frequency data for wordsToSearch 
 letterFrequencies = getLetterFrequencyOfWordArray(wordsToSearch);
 //Re-order wordsToSearch based on letter frequency and copy to alternativeWordsArray
@@ -48,7 +42,8 @@ function getBestWord(){
     if (wordsToSearch.length === 1) return wordsToSearch[0];
     //If this is the second guess, return the best word that doesn't contain any of the same
     //letters as the previous best word
-    if ((guess === 2 || guess === 3) && alternativeWordsArray.length > 0){
+    // if ((guess === 2 || guess === 3) && alternativeWordsArray.length > 0){
+    if (alternativeWordsArray.length > 0){
         //Set const for alternativeBestWord from array
         const alternativeBestWord = alternativeWordsArray[0];
         //If any of the remaining possible words contain letters in the best alternative word,
@@ -338,7 +333,7 @@ function resultsSubmitted(){
     const para = getWordsLeftPara();
     if (wordsToSearch.length <= 20){
         let words = `The ${wordsToSearch.length} remaining possible words are: `;
-        wordsToSearch.forEach(word => words += `${word.toUpperCase()}   `)
+        wordsToSearch.forEach(word => words += `${word.toUpperCase()}   `);
         para.innerText = words;
     }
     else{
