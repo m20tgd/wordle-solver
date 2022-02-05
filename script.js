@@ -52,9 +52,7 @@ function getBestWord(){
         for (const word of wordsToSearch) {
             const letterArray = word.split('');
             for (i=0;i<5;i++){
-                // if (guess === 3) console.log(letterArray.includes(alternativeBestWord[i]));
                 if (letterArray.includes(alternativeBestWord[i])){
-                    console.log(alternativeBestWord);
                     return alternativeBestWord;
                 }
             }
@@ -118,6 +116,69 @@ function updateWordsWithResults(results, wordsArray){
         
     }
     return wordsArray;
+}
+
+//Create a function that receives a word array, calculates the frequency of each letter
+//and returns a re-ordered array based on this
+function getWordsOrderedByFrequency(wordArray){
+    //Create array to store the letter frequency count
+    let letterFrequencies = new Array(26);
+    //Iterate through all the words in wordArray and update the letter frequency array
+    //with each one
+    for (let word of wordArray){
+        letterFrequencies = updateLetterFrequency(word, letterFrequencies)
+    }
+    //Re-order wordArray using letter frequency array and return
+    return wordArray.sort((a,b) => {
+        calculateLFScore(b,letterFrequencies) - calculateLFScore(a,letterFrequencies)
+    });
+}
+
+//Create a function that takes a word and letter freqeuncy array and updates the array
+// depending on the letters in the word
+function updateLetterFrequency(word, letterFrequencyArray){
+    //Turn the string into an array
+    const array = word.split('');
+    //For each letter in the word, update the relevant index of letterFrequencies
+    array.forEach(char => {
+        //Call getArrayIndex to get the index for the letter
+        const index = getArrayIndex(char);
+        //Increase the relevant index of letterFrequencies by 1
+        letterFrequencyArray[index] += 1;
+    })
+    return letterFrequencyArray;
+}
+
+//Create a fucntions that receives a word and returns its letter frequency score
+//ALF is calculated by adding the frequencies of all the unique letters, as we want 
+//to prioritise letters with more unique letters to eliminate more possible letters each round.
+function calculateLFScore(word, letterFrequencyArray){
+        //Convert word into an array
+        letters = word.split('');
+        //Sort into alphabetical order
+        letters = letters.sort();
+        //Create a variable to store the LFScore to return
+        let lfScore = 0;
+        //Create a varaible to store the last letter to check for duplicates during iteration
+        let lastLetter; 
+        //Iterate through letters and add LF score of letter to lfScore if it is not a duplicate
+        letters.forEach(letter =>{
+            if (letter != lastLetter){
+                const index = getArrayIndex(letter);
+                lfScore += parseInt(letter => {letterFrequencyArray[index]});
+            }
+            lastLetter = letter;
+        })
+        return lfScore;
+}
+
+//Create a function that receives a lower case character and returns the correct
+//array index for that char in the letterFrequencies array. (a = 0, b = 1 etc)
+function getArrayIndex(char){
+    //Get the unicode for the character
+    let code = char.charCodeAt(0);
+    //Return the code - 97 (unicode for 'a'), which will return the correct index (0-25)
+    return code - 97
 }
 
 //----------------DOM Manipulation--------------//
