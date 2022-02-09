@@ -38,9 +38,7 @@ function playWordle(targetWord, wordArray){
         let letterFrequencies = getLetterFrequencyOfWordArray(wordsToSearch);
         //Re-order arrays based on new frequencies
         wordsToSearch = getWordsOrderedByFrequency(wordsToSearch, letterFrequencies);
-        console.log(wordsToSearch[0]);
         alternativeWordsArray = getWordsOrderedByFrequency(alternativeWordsArray, letterFrequencies);
-        console.log(alternativeWordsArray[0]);
         //Get current best word
         currentBestWord = getBestWord(wordsToSearch, alternativeWordsArray);
         // console.log(`Target Word = ${targetWord} and Best Word = ${currentBestWord}`);
