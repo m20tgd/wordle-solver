@@ -37,7 +37,7 @@ createButton();
 //-----------------------------//
 
 //Create a function to return the best word to play (the first in the wordsToSearch array)
-function getBestWord(){
+function getBestWord(wordsToSearch, alternativeWordsArray){
     //If there is only one possible word remaining, then return this
     if (wordsToSearch.length === 1) return wordsToSearch[0];
     //If this is the second guess, return the best word that doesn't contain any of the same
@@ -96,7 +96,7 @@ function greenLetterUpdate(letter, index, wordsArray){
 //Create an function that receives a string of 5 numbers 0-2 to
 //represent the results of the last word. It calls the relevant update
 //functions to filter down wordsToSearch
-function updateWordsWithResults(results, wordsArray){
+function updateWordsWithResults(results, wordsArray, currentBestWord){
     results = results.split('')
     //Use for loop so index of currentBestWord and results can be matched
     for(i=0;i<5;i++){
@@ -313,16 +313,16 @@ function resultsSubmitted(){
     //Get the results inputted by the user
     let results = getResultsFromInput();
     //Pass the results to updateWordsWithResults()
-    wordsToSearch = updateWordsWithResults(results, wordsToSearch);
+    wordsToSearch = updateWordsWithResults(results, wordsToSearch, currentBestWord);
     //Filter down alternativeWordArray to remove all the letters used so far
-    alternativeWordsArray = updateWordsWithResults('00000', alternativeWordsArray);
+    alternativeWordsArray = updateWordsWithResults('00000', alternativeWordsArray, currentBestWord);
     //Get new letter frequency of wordsToSearch
     letterFrequencies = getLetterFrequencyOfWordArray(wordsToSearch);
     //Re-order both arrays based on the new letter frequency of wordsToSearch
     wordsToSearch = getWordsOrderedByFrequency(wordsToSearch, letterFrequencies);
     alternativeWordsArray = getWordsOrderedByFrequency(alternativeWordsArray, letterFrequencies);
     //Get new best word
-    currentBestWord = getBestWord();
+    currentBestWord = getBestWord(wordsToSearch, alternativeWordsArray);
     //Remove .currentRow class from the current row
     getCurrentRow().classList.remove('currentRow');
     //Add new row
