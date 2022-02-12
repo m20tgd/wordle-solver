@@ -39,8 +39,9 @@ createButton();
 
 //Create a function to return the best word to play (the first in the wordsToSearch array)
 function getBestWord(wordsToSearch, letterFrequencies, unusedLetters, knownLetters){
-    //If there are only two possible words remaining, then return one of them
-    if (wordsToSearch.length <= 2) return wordsToSearch[0];
+    //If there are only two possible words remaining or no more unused letters, 
+    //then return the highest scored word from wordsToSearch
+    if (wordsToSearch.length <= 2 || unusedLetters.length === 0) return wordsToSearch[0];
 
     let bestWord;
     let numberOfLettersRequired = 5;
@@ -379,7 +380,14 @@ function resultsSubmitted(){
     //Re-order arrays based on the new letter frequency of wordsToSearch
     wordsToSearch = getWordsOrderedByFrequency(wordsToSearch, letterFrequencies);
     lettersByFrequency = getWordsOrderedByFrequency(lettersByFrequency, letterFrequencies);
-    unusedLetters = getWordsOrderedByFrequency(unusedLetters, letterFrequencies);
+    //Filter unusedLetters to remove letters that aren't contained in the remaining words
+    unusedLetters = unusedLetters.filter(letter => {
+        for (let word of wordsToSearch){
+            if (word.includes(letter)) return true
+        }
+        //If none of the words contain the letter, then return false by default
+        return false;
+    })
     //Get new best word
     currentBestWord = getBestWord(wordsToSearch, letterFrequencies, unusedLetters, knownLetters);
     console.log("The known letters are: " + knownLetters);
