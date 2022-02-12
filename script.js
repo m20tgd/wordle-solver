@@ -41,52 +41,47 @@ createButton();
 //-----------------------------//
 
 //Create a function to return the best word to play (the first in the wordsToSearch array)
-function getBestWord(wordsToSearch, alternativeWordsArray, lettersByFrequency, unusedLetters){
+function getBestWord(wordsToSearch, letterFrequencies, unusedLetters){
     //If there are only two possible words remaining, then return one of them
     if (wordsToSearch.length <= 2) return wordsToSearch[0];
-    //Return the best word that doesn't contain any of the same
-    //letters as the previous best word
-    // if (alternativeWordsArray.length > 0){
-    //     //Set const for alternativeBestWord from array
-    //     const alternativeBestWord = alternativeWordsArray[0];
-    //     //If any of the remaining possible words contain letters in the best alternative word,
-    //     //then return the alternative word, otherwise the normal best word will be returned.
-    //     for (const word of wordsToSearch) {
-    //         const letterArray = word.split('');
-    //         for (i=0;i<5;i++){
-    //             if (letterArray.includes(alternativeBestWord[i])){
-    //                 return alternativeBestWord;
-    //             }
-    //         }
-    //     }
-    // }
-    // else{
-    //     //Get the best possible word using as many unused letters as possible
-    //     return getBestWordWithRemainingLetters(wordleDictionary, unusedLetters, 5);
-    // }
 
     let bestWord;
     let numberOfLettersRequired = 5;
     while (!bestWord){
-        bestWord = getBestWordWithRemainingLetters(wordleDictionary, unusedLetters, numberOfLettersRequired);
+        bestWord = getBestWordWithRemainingLetters(wordleDictionary, unusedLetters, numberOfLettersRequired, letterFrequencies);
         numberOfLettersRequired -=1;
     }
+    console.log(numberOfLettersRequired + 1);
     return bestWord;
 } 
 
 //Create a function that takes an array of words and letters and finds the best possible word in
 //the array that contains at least 4 of the letters
-function getBestWordWithRemainingLetters(wordArray, lettersArray, numberOfLetters){
-    //Create array of four best letters
-    const lettersRequired = lettersArray.slice(0,numberOfLetters);
-    //Iterate through letters and filter wordArray so it only contains words with that letter,
-    //which will leave it containing words which all contain the letters provided
-    lettersRequired.forEach(letter => {
-        wordArray = wordArray.filter(word => {
-            return word.includes(letter);
-        })
+function getBestWordWithRemainingLetters(wordArray, remainingLetters, numberOfLetters, letterFrequencies){
+    //Iterate through the words in wordArray and filter them down to just the words that 
+    //contain the required number of unusedLetter
+    console.log(remainingLetters);
+    let counter = 1;
+    wordArray = wordArray.filter(word => {
+        //Create a variable to store the number of unused letters found and set to zero
+        let unusedLettersFound = 0;
+        if (counter < 2) console.log(counter);
+        counter++;
+        //Iterate through remainingLetters and increment usused lettersFound by 1 if
+        //the letter is included in the word.
+        for (let letter of remainingLetters){
+            if (word.includes(letter)) unusedLettersFound += 1;
+            //Break once the required number of letters has been found
+            if (unusedLettersFound === numberOfLetters) break;
+        }
+        //Return true if the required amount of letters has been found and false if not so
+        //that the word is filtered out if it does not contain enough letters.
+        return (unusedLettersFound === numberOfLetters);
     })
-    console.log(wordArray[0]);
+    console.log(wordArray);
+    console.log(letterFrequencies);
+    wordArray = getWordsOrderedByFrequency(wordArray, letterFrequencies);
+    
     return wordArray[0]
 }
 
@@ -375,7 +370,7 @@ function resultsSubmitted(){
     lettersByFrequency = getWordsOrderedByFrequency(lettersByFrequency, letterFrequencies);
     unusedLetters = getWordsOrderedByFrequency(unusedLetters, letterFrequencies);
     //Get new best word
-    currentBestWord = getBestWord(wordsToSearch, alternativeWordsArray, letterFrequencies, unusedLetters);
+    currentBestWord = getBestWord(wordsToSearch, letterFrequencies, unusedLetters);
     //Remove .currentRow class from the current row
     getCurrentRow().classList.remove('currentRow');
     //Add new row
