@@ -7,4 +7,4 @@ I developed nodeJS apps to filter these lists down to just the five letter words
 
 I then turned this into a website that provides the user with the best word to play and provides them with their next best word based on their input that they provide from Wordle. I am continuing to modify and optimise the algorith tham provides the next word to try to ensure that it can correctly guess any of the provided words within the 6 guesses provided by Wordle.
 
-When I have become more experienced I will turn it into a dynamic website so that the data can be read from a file on the server rather than hard coded into the JS file. 
+I have continued to improve the algortithm for choosing the best word until I arrived at the current version. I have used a nodeJS app to test the algorithm with all of the words in the Wordle dictionary. It solves 97.5% of them within the required 6 guesses and takes no more than 9 guesses to solve the rest.
