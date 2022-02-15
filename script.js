@@ -38,7 +38,7 @@ createButton();
 //-----------------------------//
 
 //Create a function to return the best word to play (the first in the wordsToSearch array)
-function getBestWord(wordsToSearch, letterFrequencies, unusedLetters, knownLetters){
+function getBestWord(wordsToSearch, letterFrequencies, unusedLetters, knownLetters, allWords){
     //If there are only two possible words remaining or no more unused letters, 
     //then return the highest scored word from wordsToSearch
     if (wordsToSearch.length <= 2 || unusedLetters.length === 0) return wordsToSearch[0];
@@ -46,7 +46,7 @@ function getBestWord(wordsToSearch, letterFrequencies, unusedLetters, knownLette
     let bestWord;
     let numberOfLettersRequired = 5;
     while (!bestWord){
-        bestWord = getBestWordWithRemainingLetters(wordleDictionary, unusedLetters, knownLetters, numberOfLettersRequired, letterFrequencies);
+        bestWord = getBestWordWithRemainingLetters(allWords, unusedLetters, knownLetters, numberOfLettersRequired, letterFrequencies);
         numberOfLettersRequired -=1;
     }
     console.log(numberOfLettersRequired + 1);
@@ -165,7 +165,7 @@ function updateWordsWithResults(results, wordsArray, currentBestWord, knownLette
 }
 
 //Create a function that updates the unusedLetters array
-function updateUnusedLettersArray(word, unusedLetters, letterFrequencies){
+function updateUnusedLettersArray(word, unusedLetters){
     //Split word into an array
     word = word.split('');
     //Iterate through unusedLetters and remove if they are contained in word
@@ -372,9 +372,8 @@ function resultsSubmitted(){
     let results = getResultsFromInput();
     //Pass the results to updateWordsWithResults()
     wordsToSearch = updateWordsWithResults(results, wordsToSearch, currentBestWord, knownLetters);
-    //Remove the letters in the currentBestWord from unused letters and re-order based on letter
-    //frequency
-    unusedLetters = updateUnusedLettersArray(currentBestWord, unusedLetters, letterFrequencies);
+    //Remove the letters in the currentBestWord from unused letters and re-order based on letter frequency
+    unusedLetters = updateUnusedLettersArray(currentBestWord, unusedLetters);
     //Get new letter frequency of wordsToSearch
     letterFrequencies = getLetterFrequencyOfWordArray(wordsToSearch);
     //Re-order arrays based on the new letter frequency of wordsToSearch
@@ -389,7 +388,7 @@ function resultsSubmitted(){
         return false;
     })
     //Get new best word
-    currentBestWord = getBestWord(wordsToSearch, letterFrequencies, unusedLetters, knownLetters);
+    currentBestWord = getBestWord(wordsToSearch, letterFrequencies, unusedLetters, knownLetters, wordleDictionary);
     console.log("The known letters are: " + knownLetters);
     console.log("The unused letters are: " + unusedLetters);
     //Remove .currentRow class from the current row
